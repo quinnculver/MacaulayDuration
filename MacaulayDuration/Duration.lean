@@ -79,7 +79,7 @@ noncomputable def modifiedDuration (cf : CashflowSequence) (i : ℝ) : ℝ := (M
 #norm_num [MacaulayDuration, List.foldr, presentValue, CoeT.coe, CoeHTCT.coe] (MacaulayDuration cashflowExample 0.07) /- 68337133122415284707 / 13816447961279504607 ≈ 4.9460710 -/
 
 #norm_num [modifiedDuration, MacaulayDuration, List.foldr, presentValue, CoeT.coe, CoeHTCT.coe] (modifiedDuration cashflowExample 0.07) /- 6833713312241528470700 / 1478359931856906992949 ≈ 4.6224963 -/
-
+--blah
 /-!
 # Main theorem
 
