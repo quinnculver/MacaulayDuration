@@ -1,0 +1,4 @@
+/build
+/lake-packages/*
+MacaulayDuration.lean
+MacaulayDuration/Test.lean
