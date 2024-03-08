@@ -24,6 +24,8 @@ noncomputable def presentValueDerivative (cf : CashflowSequence) (i : ℝ) : ℝ
 
 lemma presantValueDifferentiable (i:ℝ) (cf : CashflowSequence) : HasStrictDerivAt (presentValue cf ) (presentValueDerivative cf i) i := sorry
 
+/- lemma deriv_presantValue (i: ℝ) (cf : CashflowSequence) : deriv (presentValue cf i) (presentValueDerivative cf i) := sorry -/
+
 /-cash flow for testing-/
 def simpleCashflow : CashflowSequence :=
   [
@@ -81,6 +83,9 @@ lemma modifiedDurationAltDefn : modifiedDuration = (λ (cf : CashflowSequence) (
 
 #norm_num [modifiedDuration, MacaulayDuration, List.foldr, presentValue, CoeT.coe, CoeHTCT.coe] (modifiedDuration cashflowExample 0.07) /- 6833713312241528470700 / 1478359931856906992949 ≈ 4.6224963 -/
 
+theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
+    |(∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)| ≤ |x| ^ (n + 1) / (1 - |x|) :=
+
 /- theorem firstOrderModifiedApprox -/
 /-- **Taylor's theorem** with the Lagrange form of the remainder.
 
@@ -120,4 +125,9 @@ which states that if `f` is sufficiently smooth, then
 ## Tags
 
 Macaulay duration, modified duration,
+
+TODO:
+* add sections?
+* assume P(i) ≠ 0
+* add namespaces?
 -/
