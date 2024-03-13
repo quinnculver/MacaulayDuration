@@ -8,31 +8,55 @@ import Mathlib
 import Mathlib.Analysis.Calculus.Taylor
 import Mathlib.Analysis.Calculus.Deriv.Basic
 
+variable {i : ℝ}
 
-structure Cashflow :=
+structure CashFlow :=
   time : ℝ
   amount : ℝ
   t_nonneg : 0 ≤ time
 
-inductive CashflowSequence where
-| empty : CashflowSequence
-| cons : Cashflow → CashflowSequence → CashflowSequence
+inductive CashFlowSequence where
+| empty : CashFlowSequence
+| cons : CashFlow → CashFlowSequence → CashFlowSequence
 
-noncomputable def presentValue  (i: ℝ) (cfs : CashflowSequence) : ℝ :=
+variable (cfs : CashFlowSequence)
+
+noncomputable def presentValue  (i: ℝ) (cfs : CashFlowSequence) : ℝ :=
 match cfs with
-| CashflowSequence.empty => 0
-| CashflowSequence.cons cf cfs => cf.amount / (1+i) ^ cf.time + presentValue i cfs
+| CashFlowSequence.empty => 0
+| CashFlowSequence.cons cf cfs => cf.amount / (1+i) ^ cf.time + presentValue i cfs
 
 /-simple cash flow sequence for testing-/
-def simpleCashflowSequence : CashflowSequence :=
-      CashflowSequence.cons {time := 1, amount := 1000, t_nonneg := by norm_num}
-      CashflowSequence.empty
+def simpleCashFlowSequence : CashFlowSequence :=
+      CashFlowSequence.cons {time := 1, amount := 100, t_nonneg := by norm_num}
+      CashFlowSequence.empty
 
-#norm_num [presentValue] (presentValue (0.1) simpleCashflowSequence )
+#norm_num [presentValue] (presentValue (0.1) simpleCashFlowSequence )
 
-def cashflowExample : cashFlowSequence :=
-  CashflowSequence.cons (λ k => { time := k+1, amount := 1000, t_nonneg := by sorry})
-  CashflowSequence.emtpy
+def cashflowExample22 : CashFlowSequence :=
+  CashFlowSequence.cons { time := 1, amount := 1000, t_nonneg := by norm_num }
+    (CashFlowSequence.cons { time := 2, amount := 1000, t_nonneg := by norm_num }
+      (CashFlowSequence.cons { time := 3, amount := 1000, t_nonneg := by norm_num }
+        (CashFlowSequence.cons { time := 4, amount := 1000, t_nonneg := by norm_num }
+          (CashFlowSequence.cons { time := 5, amount := 1000, t_nonneg := by norm_num }
+            (CashFlowSequence.cons { time := 6, amount := 1000, t_nonneg := by norm_num }
+              (CashFlowSequence.cons { time := 7, amount := 1000, t_nonneg := by norm_num }
+                (CashFlowSequence.cons { time := 8, amount := 1000, t_nonneg := by norm_num }
+                  (CashFlowSequence.cons { time := 9, amount := 1000, t_nonneg := by norm_num }
+                    (CashFlowSequence.cons { time := 10, amount := 1000, t_nonneg := by norm_num }
+                      CashFlowSequence.empty)))))))))
+
+#norm_num [presentValue] (presentValue 0.07 cashflowExample22) -- returns 1381644796127950460700000 / 196715135728956532249 ≈ 7023.5815, as in equation (2.2)
+
+noncomputable def presentValueDerivative  (i: ℝ) (cfs : CashFlowSequence) : ℝ :=
+match cfs with
+| CashFlowSequence.empty => 0
+| CashFlowSequence.cons cf cfs => cf.amount*(-cf.time) / (1+i) ^ (cf.time+1) + presentValue i cfs
+
+lemma deriv_presentValue (i : ℝ) cfs : deriv (λ i => presentValue i cfs) = (λ i => (presentValueDerivative i cfs)) := sorry
+
+--presentValue i cfs = presentValueDerivative := sorry
+
 /-
 noncomputable def presentValue (cf : cashFlowSequence) (i : ℝ) : ℝ :=
   cf.foldr (λ (c : Cashflow) (pv : ℝ) => pv + (c.amount) / ((1 + i) ^ (c.time))) 0
@@ -74,7 +98,7 @@ macro "#list_norm_num " t:term : command =>
   `(command| #conv (reduce_list; norm_num [CoeT.coe, CoeHTCT.coe]) => $t)
 end
 
-#list_norm_num cashflowExample
+/- #list_norm_num cashflowExample -/
 
 /- The next two calculations match the articles' (2.2) & (2.3) hence verifying that our definition work as intendend. -/
 
@@ -89,7 +113,7 @@ noncomputable def MacaulayDuration (cf : cashFlowSequence) (i : ℝ) : ℝ :=
 
 noncomputable def modifiedDuration (cf : cashFlowSequence) (i : ℝ) : ℝ := (MacaulayDuration cf i) / (1+i)
 
-lemma modifiedDurationAltDefn : modifiedDuration = (λ (cf : cashFlowSequence) (i : ℝ) => (-presentValueDerivative cf i)/(presentValue cf i)) := sorry
+lemma modifiedDurationAltDefn : modifiedDuration = (λ (cfs : cashFlowSequence) (i : ℝ) => (-presentValueDerivative  i cfs)/(presentValue i cfs)) := sorry
 
 /- Two more calculations verifying our definitions are correct -/
 #norm_num [MacaulayDuration, List.foldr, presentValue, CoeT.coe, CoeHTCT.coe] (MacaulayDuration cashflowExample 0.07) /- 68337133122415284707 / 13816447961279504607 ≈ 4.9460710 -/
