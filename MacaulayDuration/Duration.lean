@@ -7,6 +7,7 @@ Authors: Quinn Culver
 import Mathlib
 import Mathlib.Analysis.Calculus.Taylor
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 
 variable {i : ℝ}
 
@@ -53,9 +54,8 @@ match cfs with
 | CashFlowSequence.empty => 0
 | CashFlowSequence.cons cf cfs => cf.amount*(-cf.time) / (1+i) ^ (cf.time+1) + presentValue i cfs
 
-lemma deriv_presentValue (i : ℝ) cfs : deriv (λ i => presentValue i cfs) = (λ i => (presentValueDerivative i cfs)) := sorry
+lemma deriv_presentValue (i : ℝ)cfs : deriv (λ (r : ℝ) => presentValue r cfs) i = (λ (r : ℝ) => (presentValueDerivative r cfs)) i := sorry
 
---presentValue i cfs = presentValueDerivative := sorry
 
 /-
 noncomputable def presentValue (cf : cashFlowSequence) (i : ℝ) : ℝ :=
