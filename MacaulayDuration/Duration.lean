@@ -80,7 +80,7 @@ theorem deriv_presantValue (i: ℝ) (cf : cashFlowSequence) : deriv (presentValu
   (List.range 10).map (λ k => { time := k+1, amount := 1000, t_nonneg := by })
  -/
 /- The following taken from https://leanprover.zulipchat.com/#narrow/stream/113489-new-members/topic/View.20list.20elements -/
-section
+/- section
 open Lean Elab Meta Tactic
 partial def reduce_list (e : Expr) : MetaM Expr := do
   let e' ← whnf e
@@ -118,53 +118,4 @@ lemma modifiedDurationAltDefn : modifiedDuration = (λ (cfs : cashFlowSequence) 
 /- Two more calculations verifying our definitions are correct -/
 #norm_num [MacaulayDuration, List.foldr, presentValue, CoeT.coe, CoeHTCT.coe] (MacaulayDuration cashflowExample 0.07) /- 68337133122415284707 / 13816447961279504607 ≈ 4.9460710 -/
 
-#norm_num [modifiedDuration, MacaulayDuration, List.foldr, presentValue, CoeT.coe, CoeHTCT.coe] (modifiedDuration cashflowExample 0.07) /- 6833713312241528470700 / 1478359931856906992949 ≈ 4.6224963 -/
-
-/- theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
-    |(∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)| ≤ |x| ^ (n + 1) / (1 - |x|) := -/
-
-/- theorem firstOrderModifiedApprox -/
-/-- **Taylor's theorem** with the Lagrange form of the remainder.
-
-We assume that `f` is `n+1`-times continuously differentiable in the closed set `Icc x₀ x` and
-`n+1`-times differentiable on the open set `Ioo x₀ x`. Then there exists an `x' ∈ Ioo x₀ x` such
-that $$f(x) - (P_n f)(x₀, x) = \frac{f^{(n+1)}(x') (x - x₀)^{n+1}}{(n+1)!},$$
-where $P_n f$ denotes the Taylor polynomial of degree $n$ and $f^{(n+1)}$ is the $n+1$-th iterated
-derivative. -/
-/-- **Taylor's theorem** with the Cauchy form of the remainder.
-
-We assume that `f` is `n+1`-times continuously differentiable on the closed set `Icc x₀ x` and
-`n+1`-times differentiable on the open set `Ioo x₀ x`. Then there exists an `x' ∈ Ioo x₀ x` such
-that $$f(x) - (P_n f)(x₀, x) = \frac{f^{(n+1)}(x') (x - x')^n (x-x₀)}{n!},$$
-where $P_n f$ denotes the Taylor polynomial of degree $n$ and $f^{(n+1)}$ is the $n+1$-th iterated
-derivative. -/
-
-/-!
-# Main theorem
-
-This file defines the Taylor polynomial of a real function `f : ℝ → E`,
-where `E` is a normed vector space over `ℝ` and proves Taylor's theorem,
-which states that if `f` is sufficiently smooth, then
-`f` can be approximated by the Taylor polynomial up to an explicit error term.
-
-## Main definitions
-
-
-
-## Main         statements
-
-
-
-## TODO
-
-
-
-## Tags
-
-Macaulay duration, modified duration,
-
-TODO:
-* add sections?
-* assume P(i) ≠ 0
-* add namespaces?
--/
+#norm_num [modifiedDuration, MacaulayDuration, List.foldr, presentValue, CoeT.coe, CoeHTCT.coe] (modifiedDuration cashflowExample 0.07) -/ /- 6833713312241528470700 / 1478359931856906992949 ≈ 4.6224963 -/
