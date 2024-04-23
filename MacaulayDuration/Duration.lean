@@ -9,8 +9,7 @@ import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.Asymptotics.Asymptotics
 import Mathlib.Topology.Defs.Filter
-
-
+import Mathlib.Analysis.Calculus.ContDiff.Defs
 
 structure CashFlow :=
   time : ℝ
@@ -88,7 +87,7 @@ noncomputable def firstOrderModifiedApprox (cfs : CashFlowSequence) (i₀ i : �
 
 open Topology
 open Asymptotics
-
+open Set
 
 
 variable (cfs : CashFlowSequence)
@@ -96,6 +95,18 @@ variable (i₀ : ℝ)
 
 #check (λ (i:ℝ) => (presentValue cfs i - presentValue cfs i₀ * (1 - (i - i₀) * (modifiedDuration cfs i₀)))) =o[𝓝 i₀] (λ (i:ℝ) => (i - i₀))
 
+#check presentValue
+
+#check taylorWithin
+
+#check PolynomialModule
+
+#check Ioo 0
+
+--ContDiffOn 𝕜 n f s
+lemma PresValContDiff : ContDiffOn ℝ 3 (λ (x:ℝ) => presentValue cfs x) (Ioi 0) := sorry
+
+--might need |i-i₀| per wikipedia :https://en.wikipedia.org/wiki/Taylor%27s_theorem#Taylor's_theorem_in_one_real_variable
 theorem firstOrderModifiedApproxTheorem :
   (λ (i:ℝ) => (presentValue cfs i - presentValue cfs i₀ * (1 - (i - i₀) * (modifiedDuration cfs i₀)))) =o[𝓝 i₀] (λ (i:ℝ) => (i - i₀))  := by
 
@@ -107,6 +118,16 @@ theorem firstOrderModifiedApproxTheorem :
     intro x gx0
     have xi₀ : x = i₀ := by sorry
     sorry
+
   suffices h: Filter.Tendsto (λ x => f x / g x) (𝓝 i₀) (𝓝 0) from (isLittleO_iff_tendsto hgf).mpr h
+
+  let p:= taylorWithin (λ   (x:ℝ) => presentValue cfs x) 1 (Ioi 0) i₀
+
+  have pres_val_lin_approx_eq_p : λ (i:ℝ) => (presentValue cfs i₀ * (1 - (i - i₀) * (modifiedDuration cfs i₀))) = p := by sorry
+
+
+
+
+
 
   sorry
